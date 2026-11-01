@@ -1,2 +1,3 @@
-def scale(X, y, scaler=None):
-    return X, y, scaler
+def scale(X, y):
+    #dont scale for first test
+    return X, y

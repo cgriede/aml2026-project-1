@@ -1,0 +1,6 @@
+{"sessionId": "3d4ffa", "hypothesisId": "D", "location": "main.py:pre_add", "message": "nans before add", "data": {"X_train_nan": 0, "X_val_nan": 0, "y_train_nan": 0, "y_val_nan": 0}, "timestamp": 1793539265500}
+{"sessionId": "3d4ffa", "hypothesisId": "B", "location": "main.py:cols", "message": "column alignment", "data": {"same_cols": true, "n_train_cols": 100, "n_val_cols": 100}, "timestamp": 1793539265501}
+{"sessionId": "3d4ffa", "hypothesisId": "A", "location": "main.py:index", "message": "index overlap after +", "data": {"n_train": 951, "n_val": 243, "index_overlap": 0, "Xf_shape": [1194, 100], "expected_concat_rows": 1194}, "timestamp": 1793539265501}
+{"sessionId": "3d4ffa", "hypothesisId": "A", "location": "main.py:post_add", "message": "nans after +", "data": {"Xf_nan": 0, "yf_nan": 0, "Xf_all_nan": false}, "timestamp": 1793539265503}
+{"sessionId": "3d4ffa", "hypothesisId": "C", "location": "main.py:y_add", "message": "y after +", "data": {"yf_shape": [1194, 1], "yf_nan": 0}, "timestamp": 1793539265504}
+{"sessionId": "3d4ffa", "hypothesisId": "A", "location": "main.py:post_concat", "message": "nans after concat", "data": {"runId": "post-fix", "Xf_nan": 0, "yf_nan": 0, "Xf_shape": [1194, 100], "Xf_all_nan": false}, "timestamp": 1793539265506}
