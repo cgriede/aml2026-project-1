@@ -20,7 +20,6 @@ class DataOrchestrator:
         pd.DataFrame(self.y_pred, index=self.X.index, columns=["y"]).to_csv(predictions_path)
 
     def submit_predictions(self):
-
         predictions_dir = Path("predictions")
         predictions_path = predictions_dir / f"{self.model.__class__.__name__}.csv"
         assert predictions_path.exists(), "Predictions file not found"

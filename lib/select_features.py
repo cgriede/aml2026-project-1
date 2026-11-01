@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.feature_selection import mutual_info_regression
 from sklearn.linear_model import Ridge
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
@@ -7,6 +8,7 @@ from sklearn.preprocessing import StandardScaler
 
 from GLOBAL import (
     FS_CORR_MAX,
+    FS_METHOD,
     FS_N_ROUNDS,
     FS_N_TRIALS,
     FS_SCORE_SPLIT,
@@ -24,7 +26,7 @@ def select_features(
 ) -> tuple[pd.DataFrame, pd.DataFrame | None, list[str]]:
     if selected_cols is None:
         X = X[_drop_high_corr(X, y, FS_CORR_MAX)]
-        selected_cols = _monte_carlo_select(X, y)
+        selected_cols = _SELECT[FS_METHOD](X, y)
     return X[selected_cols], y, selected_cols
 
 
@@ -45,6 +47,20 @@ def _drop_high_corr(X: pd.DataFrame, y, tau: float) -> list[str]:
     else:
         print(f"High-corr drop |r|>={tau}: none")
     return [c for c in cols if c not in drop]
+
+
+def _mi_select(X, y):
+    """Keep columns with MI(y) at or above the median. No k=100 cap."""
+    y = np.ravel(y)
+    mi = mutual_info_regression(X, y, random_state=RANDOM_STATE)
+    cutoff = float(np.median(mi))
+    keep = [c for c, v in zip(X.columns, mi) if v >= cutoff]
+    print(
+        f"MI select: {len(keep)}/{X.shape[1]}  "
+        f"cutoff=median={cutoff:.4f}  "
+        f"mi[min,med,max]={mi.min():.4f},{np.median(mi):.4f},{mi.max():.4f}"
+    )
+    return keep
 
 
 def _monte_carlo_select(X, y):
@@ -118,3 +134,9 @@ def _monte_carlo_select(X, y):
     print(pd.DataFrame(rows).to_string(index=False))
     print(f"Selected {len(active)} features after {FS_N_ROUNDS} rounds")
     return active
+
+
+_SELECT = {
+    "monte_carlo": _monte_carlo_select,
+    "mi": _mi_select,
+}
