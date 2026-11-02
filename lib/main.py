@@ -21,8 +21,8 @@ def _cv_scores(X, y):
         X_tr, X_te = X.iloc[tr], X.iloc[te]
         y_tr, y_te = y.iloc[tr], y.iloc[te]
         trainer = Trainer(X_tr, y_tr)
-        ridge = trainer.train_baseline()
-        xgb = trainer.train_xgboost(X_te, y_te)
+        ridge = trainer.train("ridge")
+        xgb = trainer.train("xgboost", X_val=X_te, y_val=y_te)
         ridge_scores.append(Evaluator(ridge, X_te, y_te).evaluate())
         xgb_scores.append(Evaluator(xgb, X_te, y_te).evaluate())
         xgb_best.append(int(xgb.best_iteration))
@@ -61,8 +61,8 @@ def main():
     )
 
     trainer = Trainer(X_train, y_train)
-    baseline_model = trainer.train_baseline()
-    xgb = trainer.train_xgboost_bag(n_estimators=n_trees)
+    baseline_model = trainer.train("ridge")
+    xgb = trainer.train("xgboost_bag", n_estimators=n_trees)
     ridge_train_r2 = float(Evaluator(baseline_model, X_train, y_train).evaluate())
     xgb_train_r2 = float(Evaluator(xgb, X_train, y_train).evaluate())
     print(f"Ridge full-fit train R2: {ridge_train_r2:.4f}")

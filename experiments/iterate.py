@@ -20,7 +20,9 @@ from clean import clean  # noqa: E402
 from load import load  # noqa: E402
 from remove_outliers import remove_outliers  # noqa: E402
 from scale import scale  # noqa: E402
-from select_features import _corr_select, _drop_high_corr, _mi_select  # noqa: E402
+from select_features.corr import select as corr_select  # noqa: E402
+from select_features.drop_high_corr import drop_high_corr  # noqa: E402
+from select_features.mi import select as mi_select  # noqa: E402
 from train import Trainer  # noqa: E402
 
 OUT = ROOT / "runs" / "iterations.jsonl"
@@ -35,15 +37,15 @@ def prepare(drop_outliers: bool = True, scale_first: bool = False):
         X, y = remove_outliers(X, y)
     if not scale_first:
         X, y, _ = scale(X, y)
-    keep = _drop_high_corr(X, y, FS_CORR_MAX)
+    keep = drop_high_corr(X, y, FS_CORR_MAX)
     return X[keep], y
 
 
 def select(X, y, method: str, k: int | None = None):
     if method == "mi":
-        cols = _mi_select(X, y)
+        cols = mi_select(X, y)
     elif method == "corr":
-        cols = _corr_select(X, y, k=k)
+        cols = corr_select(X, y, k=k)
     elif method == "all":
         cols = list(X.columns)
         print(f"all post-cull: {len(cols)}")
@@ -60,8 +62,8 @@ def cv(X, y) -> dict:
         X_tr, X_te = X.iloc[tr], X.iloc[te]
         y_tr, y_te = yv[tr], yv[te]
         trainer = Trainer(X_tr, y_tr)
-        r = trainer.train_baseline()
-        x = trainer.train_xgboost(X_te, y_te)
+        r = trainer.train("ridge")
+        x = trainer.train("xgboost", X_val=X_te, y_val=y_te)
         ridge.append(float(r2_score(y_te, r.predict(X_te))))
         xgb.append(float(r2_score(y_te, x.predict(X_te))))
         trees.append(int(x.best_iteration))
@@ -92,7 +94,7 @@ def cv_seed_mean(X, y, seeds=SEEDS) -> dict:
         X_tr, X_te = X.iloc[tr], X.iloc[te]
         y_tr, y_te = yv[tr], yv[te]
         trainer = Trainer(X_tr, y_tr)
-        r = trainer.train_baseline()
+        r = trainer.train("ridge")
         ridge.append(float(r2_score(y_te, r.predict(X_te))))
         preds = []
         for seed in seeds:
@@ -132,8 +134,8 @@ def cv_xgb_ridge(X, y) -> dict:
         X_tr, X_te = X.iloc[tr], X.iloc[te]
         y_tr, y_te = yv[tr], yv[te]
         trainer = Trainer(X_tr, y_tr)
-        r = trainer.train_baseline()
-        x = trainer.train_xgboost(X_te, y_te)
+        r = trainer.train("ridge")
+        x = trainer.train("xgboost", X_val=X_te, y_val=y_te)
         rp, xp = r.predict(X_te), x.predict(X_te)
         ridge.append(float(r2_score(y_te, rp)))
         mix.append(float(r2_score(y_te, 0.5 * rp + 0.5 * xp)))

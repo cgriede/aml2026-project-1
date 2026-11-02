@@ -26,7 +26,8 @@ from GLOBAL import CV_FOLDS, FS_CORR_MAX, RANDOM_STATE  # noqa: E402
 from clean import clean  # noqa: E402
 from load import load  # noqa: E402
 from remove_outliers import remove_outliers  # noqa: E402
-from select_features import _drop_high_corr, _mi_select  # noqa: E402
+from select_features.drop_high_corr import drop_high_corr  # noqa: E402
+from select_features.mi import select as mi_select  # noqa: E402
 
 OUT = ROOT / "runs" / "r2_levers.jsonl"
 
@@ -115,10 +116,10 @@ def _prepare(drop_outliers: bool, mi_cut: bool) -> tuple[pd.DataFrame, pd.DataFr
     X, _ = clean(X)
     if drop_outliers:
         X, y = remove_outliers(X, y)
-    keep = _drop_high_corr(X, y, FS_CORR_MAX)
+    keep = drop_high_corr(X, y, FS_CORR_MAX)
     X = X[keep]
     if mi_cut:
-        X = X[_mi_select(X, y)]
+        X = X[mi_select(X, y)]
     print(f"prepared drop_outliers={drop_outliers} mi_cut={mi_cut}  {X.shape}")
     return X, y
 
