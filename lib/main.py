@@ -6,6 +6,7 @@ from remove_outliers import remove_outliers
 from scale import scale
 from select_features import select_features
 from train import Trainer
+from runlog import append_run
 
 import numpy as np
 from sklearn.model_selection import KFold
@@ -35,13 +36,14 @@ def _cv_scores(X, y):
 def main():
     X_train, y_train, X_test = load()
 
-    X_train, dead_cols = clean(X_train)
-    X_test, _ = clean(X_test, dead_cols)
+    X_train, drop_cols = clean(X_train)
+    X_test, _ = clean(X_test, drop_cols)
 
-    X_train, y_train = remove_outliers(X_train, y_train)
+    if DROP_OUTLIERS:
+        X_train, y_train = remove_outliers(X_train, y_train)
 
-    X_train, y_train = scale(X_train, y_train)
-    X_test, _ = scale(X_test, None)
+    X_train, y_train, scaler = scale(X_train, y_train)
+    X_test, _, _ = scale(X_test, None, scaler)
 
     X_train, y_train, selected_cols = select_features(X_train, y_train)
     X_test, _, _ = select_features(X_test, None, selected_cols)
@@ -60,19 +62,35 @@ def main():
 
     trainer = Trainer(X_train, y_train)
     baseline_model = trainer.train_baseline()
-    xgb = trainer.train_xgboost(n_estimators=n_trees)
-    print(f"Ridge full-fit train R2: {Evaluator(baseline_model, X_train, y_train).evaluate():.4f}")
-    print(f"XGB  full-fit train R2: {Evaluator(xgb, X_train, y_train).evaluate():.4f}")
+    xgb = trainer.train_xgboost_bag(n_estimators=n_trees)
+    ridge_train_r2 = float(Evaluator(baseline_model, X_train, y_train).evaluate())
+    xgb_train_r2 = float(Evaluator(xgb, X_train, y_train).evaluate())
+    print(f"Ridge full-fit train R2: {ridge_train_r2:.4f}")
+    print(f"XGB  full-fit train R2: {xgb_train_r2:.4f}")
 
-    #NOTE skip this for now first find useful training method
-    #return None
-    #store the predictions on test setand submit them
     data_orchestrator = DataOrchestrator(X_test, xgb)
-    y_pred = data_orchestrator.predict()
+    data_orchestrator.predict()
     data_orchestrator.store_predictions()
+    kaggle_public = data_orchestrator.submit_predictions() if KAGGLE_SUBMIT else None
 
-    #NOTE max 10 predictions per day
-    #data_orchestrator.submit_predictions()
+    append_run(
+        {
+            "n_train": int(X_train.shape[0]),
+            "n_features": int(X_train.shape[1]),
+            "ridge_cv_mean": float(ridge_scores.mean()),
+            "ridge_cv_std": float(ridge_scores.std()),
+            "xgb_cv_mean": float(xgb_scores.mean()),
+            "xgb_cv_std": float(xgb_scores.std()),
+            "ridge_cv_folds": [float(s) for s in ridge_scores],
+            "xgb_cv_folds": [float(s) for s in xgb_scores],
+            "xgb_best_iteration": [int(b) for b in xgb_best],
+            "n_trees": n_trees,
+            "ridge_train_r2": ridge_train_r2,
+            "xgb_train_r2": xgb_train_r2,
+            "kaggle_public": kaggle_public,
+        },
+        models=[baseline_model, xgb],
+    )
 
 
 if __name__ == "__main__":

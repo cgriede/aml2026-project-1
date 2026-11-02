@@ -8,6 +8,7 @@ from sklearn.preprocessing import StandardScaler
 
 from GLOBAL import (
     FS_CORR_MAX,
+    FS_K,
     FS_METHOD,
     FS_N_ROUNDS,
     FS_N_TRIALS,
@@ -47,6 +48,19 @@ def _drop_high_corr(X: pd.DataFrame, y, tau: float) -> list[str]:
     else:
         print(f"High-corr drop |r|>={tau}: none")
     return [c for c in cols if c not in drop]
+
+
+def _corr_select(X, y, k: int | None = None):
+    y = pd.Series(np.ravel(y), index=X.index)
+    scores = X.corrwith(y).abs()
+    k = min(FS_K if k is None else k, X.shape[1])
+    keep = scores.nlargest(k).index.tolist()
+    kept = scores[keep]
+    print(
+        f"corr select: top {k}/{X.shape[1]}  "
+        f"|r|[min,med,max]={kept.min():.4f},{kept.median():.4f},{kept.max():.4f}"
+    )
+    return keep
 
 
 def _mi_select(X, y):
@@ -139,4 +153,5 @@ def _monte_carlo_select(X, y):
 _SELECT = {
     "monte_carlo": _monte_carlo_select,
     "mi": _mi_select,
+    "corr": _corr_select,
 }

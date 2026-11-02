@@ -1,5 +1,7 @@
 import pandas as pd
 
+from GLOBAL import CLEAN_ABSMAX
+
 
 def _dead_columns(X: pd.DataFrame) -> list[str]:
     all_nan = X.isna().all()
@@ -7,10 +9,17 @@ def _dead_columns(X: pd.DataFrame) -> list[str]:
     return X.columns[all_nan | all_zero].tolist()
 
 
-def clean(X: pd.DataFrame, dead_cols: list[str] | None = None) -> tuple[pd.DataFrame, list[str]]:
-    if dead_cols is None:
-        dead_cols = _dead_columns(X)
-        print(f"Dropping {len(dead_cols)} dead columns: {dead_cols}")
-    X = X.drop(columns=dead_cols, errors="ignore")
+def _insane_columns(X: pd.DataFrame) -> list[str]:
+    return X.columns[X.abs().max() > CLEAN_ABSMAX].tolist()
+
+
+def clean(X: pd.DataFrame, drop_cols: list[str] | None = None) -> tuple[pd.DataFrame, list[str]]:
+    if drop_cols is None:
+        dead = _dead_columns(X)
+        insane = _insane_columns(X)
+        print(f"Dropping {len(dead)} dead columns: {dead}")
+        print(f"Dropping {len(insane)} insane-absmax (>{CLEAN_ABSMAX:g}) columns: {insane}")
+        drop_cols = dead + insane
+    X = X.drop(columns=drop_cols, errors="ignore")
     X = X.fillna(X.median())
-    return X, dead_cols
+    return X, drop_cols
