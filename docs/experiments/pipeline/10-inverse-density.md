@@ -2,7 +2,7 @@
 experiment_id: 10
 slug: inverse_density
 title: "Exp 10 — Inverse-density weights"
-current_stage: implement
+current_stage: closeout
 overall_verdict: null
 blocked_by: null
 code_path: experiments/010/
@@ -10,9 +10,9 @@ stages:
   charter: { status: done, completed_utc: "2026-11-04T16:50:00Z", notes: "Weight rare ages. Clip and mean-normalize. Score unweighted." }
   literature: { status: skipped, notes: "Yang et al. 2021 LDS, operator brief." }
   design: { status: done, completed_utc: "2026-11-04T16:50:00Z", notes: "5-year bins and Gaussian LDS against an unweighted XGB." }
-  implement: { status: done, completed_utc: "2026-11-04T16:50:00Z", notes: "run_density_weights.py. Smoke ok. Full run not started." }
-  run: { status: pending }
-  closeout: { status: pending }
+  implement: { status: done, completed_utc: "2026-11-04T16:50:00Z", notes: "run_density_weights.py. Smoke ok." }
+  run: { status: done, completed_utc: "2026-11-04T17:05:28Z", notes: "Grid plus extreme α=1. Neither beats none." }
+  closeout: { status: done, completed_utc: "2026-11-04T17:06:00Z", notes: "Keep none. Raising the cap loses R²." }
 run_lock_holder: null
 decision_ids: []
 ---
@@ -57,6 +57,19 @@ The incumbent is `none`. A weighted arm replaces it only when its mean paired Δ
 uv run python experiments/010/run_density_weights.py --smoke
 uv run python experiments/010/run_density_weights.py
 ```
+
+## Closeout
+
+**Keep `none`.** Finished 2026-11-04T17:05:28Z. The 8× cap was binding: α = 0.7 still peaked near 6×, same as α = 0.5. Lifting it to a pure inverse (α = 1, cap 20, cap 64, or no cap) pushes the rarest training rows to 11–40× and loses R² on every fold.
+
+| Arm | R² | vs none | Young MAE | Mid MAE | Old MAE |
+|-----|---:|--------:|----------:|--------:|--------:|
+| none | **0.530** | | 9.37 | 3.84 | 9.17 |
+| bin_a10_c20 | 0.486 | −0.044 (SE 0.012) | 9.40 | 4.27 | 8.71 |
+| bin_a10_c64 | 0.491 | −0.039 (SE 0.010) | 9.26 | 4.25 | 8.60 |
+| bin_a10 | 0.491 | −0.039 (SE 0.010) | 9.25 | 4.25 | 8.62 |
+
+The old tail's MAE drops by about 0.5 year. The middle gives that back, and more. `lib/` was not changed.
 
 ## Artifacts
 

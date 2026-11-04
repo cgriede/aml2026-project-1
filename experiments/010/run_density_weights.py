@@ -64,6 +64,13 @@ ARMS = (
     ("lds_s3_a05", ("lds", 0.5, 3.0)),
     ("lds_s3_a07", ("lds", 0.7, 3.0)),
 )
+# α=1. The first run capped weights at 8×, which flattened the bins whose
+# inverse frequency is 20–64× the mode. These three lift that cap.
+EXTREME_ARMS = (
+    ("bin_a10_c20", ("bin", 1.0, 20.0)),
+    ("bin_a10_c64", ("bin", 1.0, 64.0)),
+    ("bin_a10", ("bin", 1.0, float("inf"))),
+)
 SERIES = tuple(name for name, _ in ARMS)
 INCUMBENT = "none"
 FLOOR = 0.01
@@ -105,15 +112,27 @@ def _edges(y: np.ndarray, width: float) -> np.ndarray:
     return lo + width * np.arange(n_bins + 1)
 
 
-def _from_density(p: np.ndarray, alpha: float) -> tuple[np.ndarray, dict]:
+def _cap(spec: tuple) -> float:
+    if spec[0] == "bin" and len(spec) == 3:
+        return float(spec[2])
+    return CLIP
+
+
+def _from_density(p: np.ndarray, alpha: float, clip: float) -> tuple[np.ndarray, dict]:
     raw = np.power(np.maximum(p, 1e-12), -float(alpha))
-    cap = CLIP * float(np.median(raw))
-    clipped = np.minimum(raw, cap)
+    if np.isfinite(clip):
+        cap = clip * float(np.median(raw))
+        clipped = np.minimum(raw, cap)
+        clipped_frac = float(np.mean(raw > cap + 1e-9))
+    else:
+        clipped = raw
+        clipped_frac = 0.0
     w = clipped / clipped.mean()
     info = {
         "max": float(w.max()),
         "p95": float(np.quantile(w, 0.95)),
-        "clipped_frac": float(np.mean(raw > cap + 1e-9)),
+        "clipped_frac": clipped_frac,
+        "clip": None if not np.isfinite(clip) else float(clip),
     }
     return w, info
 
@@ -125,7 +144,7 @@ def _weights(y: np.ndarray, spec: tuple) -> tuple[np.ndarray, dict]:
     if kind == "bin":
         counts, idx = _histogram(y, _edges(y, BIN_WIDTH))
         p = counts[idx] / counts.sum()
-        return _from_density(p, alpha)
+        return _from_density(p, alpha, _cap(spec))
     if kind == "lds":
         sigma = float(spec[2])
         counts, idx = _histogram(y, _edges(y, 1.0))
@@ -135,7 +154,7 @@ def _weights(y: np.ndarray, spec: tuple) -> tuple[np.ndarray, dict]:
         kernel /= kernel.sum()
         smooth = np.convolve(counts, kernel, mode="same")
         smooth = np.maximum(smooth, 1e-6)
-        return _from_density(smooth[idx], alpha)
+        return _from_density(smooth[idx], alpha, _cap(spec))
     raise ValueError(kind)
 
 
@@ -145,6 +164,9 @@ def _check() -> None:
     assert abs(w.mean() - 1.0) < 1e-9
     assert info["clipped_frac"] > 0
     assert w[-1] > w[0] * 5
+    open_w, open_info = _weights(crowded, ("bin", 1.0, float("inf")))
+    assert open_info["clipped_frac"] == 0.0
+    assert open_w[-1] > w[-1]
 
     y = np.concatenate([np.full(100, 70.0), np.array([71.0, 90.0])])
     w_lds, _ = _weights(y, ("lds", 1.0, 2.0))
@@ -227,9 +249,9 @@ def _fit(X, y, spec, smoke: bool):
     return model, trees, w
 
 
-def _decide(fold_rows: list[dict]) -> dict:
+def _decide(fold_rows: list[dict], names: tuple[str, ...] = SERIES) -> dict:
     table = {}
-    for name in SERIES:
+    for name in names:
         r2 = np.array([row[name]["r2"] for row in fold_rows])
         rmse = np.array([row[name]["rmse"] for row in fold_rows])
         mae = np.array([row[name]["mae"] for row in fold_rows])
@@ -241,7 +263,7 @@ def _decide(fold_rows: list[dict]) -> dict:
             "mae_mean": float(mae.mean()),
         }
     challengers = {}
-    for name in SERIES:
+    for name in names:
         if name == INCUMBENT:
             continue
         delta = np.array([row[name]["r2"] - row[INCUMBENT]["r2"] for row in fold_rows])
@@ -257,7 +279,7 @@ def _decide(fold_rows: list[dict]) -> dict:
     return {"keep": keep, "incumbent": INCUMBENT, "challengers": challengers, "table": table}
 
 
-def _tails(y: np.ndarray, pred: dict[str, np.ndarray]) -> dict:
+def _tails(y: np.ndarray, pred: dict[str, np.ndarray], names: tuple[str, ...] = SERIES) -> dict:
     lo, hi = np.quantile(y, [0.1, 0.9])
     bands = {
         "young": y <= lo,
@@ -265,7 +287,7 @@ def _tails(y: np.ndarray, pred: dict[str, np.ndarray]) -> dict:
         "old": y >= hi,
     }
     out = {"young_max": float(lo), "old_min": float(hi)}
-    for name in SERIES:
+    for name in names:
         err = np.abs(pred[name] - y)
         out[name] = {band: float(err[mask].mean()) for band, mask in bands.items()}
         out[name]["n_young"] = int(bands["young"].sum())
@@ -286,12 +308,26 @@ def _curve(age: np.ndarray, values: np.ndarray) -> dict:
     return {"age": centers, "value": means}
 
 
-def _plot(y: np.ndarray, pred: dict[str, np.ndarray], curves: dict, verdict: dict, smoke: bool) -> None:
+def _shown(names: tuple[str, ...], table: dict) -> list[str]:
+    bins = [n for n in names if n.startswith("bin_")]
+    ldss = [n for n in names if n.startswith("lds_")]
+    show = [INCUMBENT]
+    if len(bins) <= 3:
+        show.extend(bins)
+    elif bins:
+        show.append(max(bins, key=lambda n: table[n]["r2_mean"]))
+    if ldss:
+        show.append(max(ldss, key=lambda n: table[n]["r2_mean"]))
+    return show
+
+
+def _plot(y: np.ndarray, pred: dict[str, np.ndarray], curves: dict, verdict: dict, dest: Path, names: tuple[str, ...] = SERIES) -> None:
     table = verdict["table"]
-    best_bin = max((n for n in SERIES if n.startswith("bin_")), key=lambda n: table[n]["r2_mean"])
-    best_lds = max((n for n in SERIES if n.startswith("lds_")), key=lambda n: table[n]["r2_mean"])
-    show = (INCUMBENT, best_bin, best_lds)
-    colors = {INCUMBENT: INK, best_bin: BIN_COLOR, best_lds: LDS_COLOR}
+    show = _shown(names, table)
+    palette = (BIN_COLOR, LDS_COLOR, "#3d5a80", "#7a4e2d")
+    colors = {INCUMBENT: INK}
+    for i, name in enumerate(n for n in show if n != INCUMBENT):
+        colors[name] = palette[i % len(palette)]
     edges = _edges(y, BIN_WIDTH)
     fig, axes = plt.subplots(1, 2, figsize=(10.2, 4.4))
     for name in show:
@@ -322,18 +358,17 @@ def _plot(y: np.ndarray, pred: dict[str, np.ndarray], curves: dict, verdict: dic
         ax.grid(color="#f0f0f0")
         ax.set_axisbelow(True)
     fig.tight_layout()
-    path = PLOT.with_name("density_weights.smoke.png") if smoke else PLOT
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(path, dpi=140)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(dest, dpi=140)
     plt.close(fig)
-    print(f"wrote {path}", flush=True)
+    print(f"wrote {dest}", flush=True)
 
 
-def _print(verdict: dict, tails: dict) -> None:
+def _print(verdict: dict, tails: dict, names: tuple[str, ...] = SERIES) -> None:
     print(f"keep={verdict['keep']}", flush=True)
     print(f"{'arm':<12} {'r2':>8} {'rmse':>8} {'mae':>8} {'vs none':>8}", flush=True)
     base = verdict["table"][INCUMBENT]["r2_mean"]
-    for name in SERIES:
+    for name in names:
         row = verdict["table"][name]
         gap = "" if name == INCUMBENT else f"{row['r2_mean'] - base:+.3f}"
         print(
@@ -345,7 +380,7 @@ def _print(verdict: dict, tails: dict) -> None:
         flush=True,
     )
     print(f"{'arm':<12} {'young':>8} {'mid':>8} {'old':>8}", flush=True)
-    for name in SERIES:
+    for name in names:
         row = tails[name]
         print(f"{name:<12} {row['young']:8.3f} {row['mid']:8.3f} {row['old']:8.3f}", flush=True)
 
@@ -380,7 +415,7 @@ def _release() -> None:
         LOCK.unlink()
 
 
-def run(smoke: bool = False) -> dict:
+def run(smoke: bool = False, extreme: bool = False) -> dict:
     _check()
     k150 = _k150()
     os.chdir(ROOT)
@@ -396,7 +431,14 @@ def run(smoke: bool = False) -> dict:
     folds_n = 2 if smoke else CV_FOLDS
     splitter = KFold(n_splits=folds_n, shuffle=True, random_state=RANDOM_STATE)
 
-    oof = {name: np.full(n, np.nan) for name in SERIES}
+    arms = EXTREME_ARMS if extreme else ARMS
+    names = tuple(name for name, _ in arms)
+    if extreme:
+        if not OUT.exists() or smoke:
+            raise SystemExit(f"extreme compares against the saved unweighted run in {OUT}")
+        prior = json.loads(OUT.read_text())
+        names = (INCUMBENT,) + names
+    oof = {name: np.full(n, np.nan) for name in names}
     y_oof = np.full(n, np.nan)
     fold_rows = []
     fold_meta = []
@@ -411,7 +453,7 @@ def run(smoke: bool = False) -> dict:
         y_te_v = np.ravel(y_te)
         y_oof[te] = y_te_v
         scores = {}
-        for name, spec in ARMS:
+        for name, spec in arms:
             model, trees, w = _fit(X_tr, y_tr_v, spec, smoke)
             pred = np.ravel(model.predict(X_te))
             oof[name][te] = pred
@@ -433,13 +475,26 @@ def run(smoke: bool = False) -> dict:
                     "r2": scores[name]["r2"],
                 }
             )
+        if extreme:
+            saved = np.asarray(prior["pred"][INCUMBENT], dtype=float)
+            scores[INCUMBENT] = _metrics(y_te_v, saved[te])
+            oof[INCUMBENT][te] = saved[te]
         fold_rows.append(scores)
 
-    verdict = _decide(fold_rows)
-    pred = {name: oof[name] for name in SERIES}
-    tails = _tails(y_oof, pred)
-    _print(verdict, tails)
-    _plot(y_oof, pred, curves, verdict, smoke)
+    if extreme and not np.allclose(y_oof, np.asarray(prior["y"], dtype=float)):
+        raise SystemExit("saved unweighted run is not the same rows")
+
+    verdict = _decide(fold_rows, names)
+    pred = {name: oof[name] for name in names}
+    tails = _tails(y_oof, pred, names)
+    _print(verdict, tails, names)
+    if extreme:
+        dest = OUT.with_name("density_weights_extreme.json").with_suffix(".png")
+    elif smoke:
+        dest = PLOT.with_name("density_weights.smoke.png")
+    else:
+        dest = PLOT
+    _plot(y_oof, pred, curves, verdict, dest, names)
     payload = {
         "ts": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "smoke": smoke,
@@ -453,9 +508,15 @@ def run(smoke: bool = False) -> dict:
         "folds": fold_meta,
         "weight_curves_fold0": curves,
         "y": [float(v) for v in y_oof],
-        "pred": {name: [float(v) for v in oof[name]] for name in SERIES},
+        "pred": {name: [float(v) for v in oof[name]] for name in names},
+        "extreme": extreme,
     }
-    out = OUT.with_name("density_weights.smoke.json") if smoke else OUT
+    if extreme:
+        out = OUT.with_name("density_weights_extreme.json")
+    elif smoke:
+        out = OUT.with_name("density_weights.smoke.json")
+    else:
+        out = OUT
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload))
     print(f"wrote {out}", flush=True)
@@ -464,10 +525,11 @@ def run(smoke: bool = False) -> dict:
 
 def main() -> None:
     smoke = "--smoke" in sys.argv
+    extreme = "--extreme" in sys.argv
     if not smoke:
         _acquire()
     try:
-        run(smoke)
+        run(smoke, extreme)
     finally:
         if not smoke:
             _release()
