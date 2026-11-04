@@ -1,0 +1,73 @@
+\section{Random features}
+\label{sec:rf}
+
+Keep the predictor, replace the infinite map by \(2Q\) numbers with \(2Q<n\).
+Draw frequencies \(\omega_q\sim\mathcal{N}(0,I_d)\) once, before seeing data, and set
+\begin{equation}
+\psi(x)
+= \frac1{\sqrt Q}
+\begin{pmatrix}
+\cos(\omega_1^\top x) \\
+\sin(\omega_1^\top x) \\
+\vdots \\
+\cos(\omega_Q^\top x) \\
+\sin(\omega_Q^\top x)
+\end{pmatrix}
+\in\R^{2Q}.
+\label{eq:psi}
+\end{equation}
+Rows \(\psi(x_i)^\top\) form \(\Psi\in\R^{n\times 2Q}\). The estimator is ordinary ridge regression in these coordinates,
+\begin{equation}
+\hat f(x_*)
+= \psi(x_*)^\top(\Psi^\top\Psi+\lambda I)^{-1}\Psi^\top y.
+\label{eq:rf}
+\end{equation}
+Cost \(O(nQd+nQ^2+Q^3)\), linear in the sample size.
+
+It matches kernel ridge when \(\psi(x)^\top\psi(x')\) matches \(k(x,x')\).
+Bochner's theorem writes the Gaussian kernel as a Fourier expectation \cite{bochner1933,rudin1962}.
+Rahimi and Recht turn that expectation into features \cite{rahimi2007}.
+Because \(k\) is real and even, the expectation is an average of cosines,
+\begin{equation}
+k(x,x')
+= \kappa(x-x')
+= \E_{\omega\sim\mathcal{N}(0,I_d)}
+\bigl[\cos\bigl(\omega^\top(x-x')\bigr)\bigr].
+\label{eq:bochner}
+\end{equation}
+The average of \(Q\) independent draws is
+\begin{equation}
+k(x,x')
+\approx \frac1Q\sum_{q\le Q}\cos\bigl(\omega_q^\top(x-x')\bigr)
+= \psi(x)^\top\psi(x').
+\label{eq:lln}
+\end{equation}
+The cosine splits by the angle formula, which is why \(\psi\) stores both \(\cos(\omega_q^\top x)\) and \(\sin(\omega_q^\top x)\).
+The weak law puts the error near \(1/\sqrt{2Q}\). At \(Q=5000\) that is about \(0.01\).
+
+Then \(K\approx\Psi\Psi^\top\) and \(k_*\approx\Psi\psi(x_*)\).
+The push-through identity
+\begin{equation}
+\Psi^\top(\Psi\Psi^\top+\lambda I)^{-1}
+= (\Psi^\top\Psi+\lambda I)^{-1}\Psi^\top
+\label{eq:push}
+\end{equation}
+turns the \(n\times n\) kernel predictor into the \(2Q\times 2Q\) estimator \eqref{eq:rf}.
+
+\begin{table}[ht]
+\centering
+\caption{Three estimators of the same squared loss.}
+\label{tab:costs}
+\begin{tabular}{lll}
+\toprule
+Estimator & Coordinates & Work \\
+\midrule
+Linear ridge & \(x\in\R^d\) & \(O(nd^2+d^3)\) \\
+Kernel ridge & \(\varphi(x)\in\R^\infty\) & \(O(n^2 d+n^3)\) \\
+Random features & \(\psi(x)\in\R^{2Q}\) & \(O(nQd+nQ^2+Q^3)\) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+The kernel buys every scaled monomial. Random features buy the same predictor back at a cost linear in \(n\).

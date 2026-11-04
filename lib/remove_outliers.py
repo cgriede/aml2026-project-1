@@ -7,33 +7,42 @@ from sklearn.svm import OneClassSVM
 from GLOBAL import RANDOM_STATE
 
 
-def remove_outliers(X_train: pd.DataFrame, y_train: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    # Isolation Forest, contamination guessed at 5%
-    outlier_model = IsolationForest(contamination=0.05, random_state=RANDOM_STATE)
+def _isoforest_outliers(X_train: pd.DataFrame) -> set[int]:
+    outlier_model = IsolationForest(contamination=0.01, random_state=RANDOM_STATE)
+    print(f"contamination: {outlier_model.contamination}")
     outlier_model.fit(X_train)
     outlier_preds = outlier_model.predict(X_train)
-    isoforest_outlier_indices = set(np.where(outlier_preds == -1)[0])
+    return set(np.where(outlier_preds == -1)[0])
 
-    print(f"Number of outliers detected: {len(isoforest_outlier_indices)}")
-
-    # OneClassSVM on a local scale (pipeline scale() runs later)
+def _svm_outliers(X_train: pd.DataFrame) -> set[int]:
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X_train)
-
-    svm_model = OneClassSVM(nu=0.01, kernel="rbf", gamma="scale")
+    svm_model = OneClassSVM(nu=0.1, kernel="rbf", gamma="scale")
+    print(f"nu: {svm_model.nu}, kernel: {svm_model.kernel}, gamma: {svm_model.gamma}")
     svm_model.fit(X_scaled)
     svm_preds = svm_model.predict(X_scaled)
+    return set(np.where(svm_preds == -1)[0])
 
-    svm_outlier_indices = set(np.where(svm_preds == -1)[0])
+METHODS = {
+    "isoforest": _isoforest_outliers,
+    "svm": _svm_outliers,
+}
 
-    print(f"Number of outliers detected by SVM: {np.sum(svm_preds == -1)}")
 
-    common_outliers = isoforest_outlier_indices & svm_outlier_indices
-    print(f"Number of common outliers detected by both methods: {len(common_outliers)}")
-
-    drop_idx = X_train.index[list(common_outliers)]
-    X_train = X_train.drop(index=drop_idx)
-    y_train = y_train.drop(index=drop_idx)
-    print(f"Cleaned X_train shape: {X_train.shape}, Cleaned y_train shape: {y_train.shape}")
-
-    return X_train, y_train
+def remove_outliers(X_train: pd.DataFrame, y_train: pd.DataFrame, methods: list[str] | None = None) -> tuple[pd.DataFrame, pd.DataFrame]:
+    if methods is None:
+        methods = list(METHODS)
+    if len(methods) == 0:
+        return X_train, y_train
+    unknown = [name for name in methods if name not in METHODS]
+    if unknown:
+        raise ValueError(f"Unknown outlier method {unknown}. Known: {list(METHODS)}")
+    seen: set[int] = set()
+    for name in methods:
+        found = METHODS[name](X_train)
+        new = found - seen
+        seen |= found
+        print(f"{name}: {len(found)} flagged, {len(new)} new")
+    print(f"dropped {len(seen)} rows")
+    drop = X_train.index[sorted(seen)]
+    return X_train.drop(index=drop), y_train.drop(index=drop)

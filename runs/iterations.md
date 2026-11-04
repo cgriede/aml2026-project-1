@@ -10,6 +10,9 @@ Judge = Ridge CV. Goal = XGB CV.
 | 3 | skip IF / z-score then IF | **yes, no row drop** | 0.28 vs 0.30 | **0.542** vs 0.519 | 1212×150 | IF∩SVM deleted useful rows. z-score IF still drops 21, XGB 0.537. |
 | 4 | 3-seed mean / XGB+Ridge | **yes, 3-seed mean** | 0.28 | **0.552** vs 0.542 | 1212×150 | +0.010. XGB+Ridge 0.485, Ridge still too weak to average in. |
 | 5 | missingness features | **no** | 0.28–0.30 | 0.542–0.548 | 1212×151–161 | `nan_count` \|r\| with age = 0.05. Best XGB +0.006, inside fold noise. |
+| 6 | scale, then IF / SVM / both | **no, no row drop** | 0.28 / 0.27 / 0.28 / 0.24 | **0.542** vs 0.502 / 0.489 / 0.497 | 1212×150 | 21 shared, 40 IF-only, 52 SVM-only. Uniques look like the bulk. [note](../experiments/007/EXP.md) |
+| 7 | SVM `nu` 0.005 / 0.01 / 0.05 / 0.1 | **no, no row drop** | 0.17 / 0.28 / 0.30 / 0.29 | **0.542** vs 0.530 / 0.489 / 0.539 / 0.490 | 1212×150 | Closest is nu=0.05, XGB −0.003 with a wider fold scatter. [note](../experiments/007/EXP.md) |
+| 8 | IF `contamination` 0.005 / 0.01 / 0.05 / 0.1 | **no, no row drop** | 0.25 / 0.30 / 0.27 / 0.26 | **0.542** vs 0.540 / 0.536 / 0.502 / 0.544 | 1212×150 | 0.1 is +0.002 XGB, inside its fold SE, wider scatter. [note](../experiments/007/EXP.md) |
 
 ## Accepted pipeline
 

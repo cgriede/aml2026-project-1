@@ -1,0 +1,36 @@
+\section{Polynomial features}
+\label{sec:poly}
+
+\(\mathcal{H}_l\) cannot approximate a general continuous target.
+On any closed bounded \(B\subset\R^d\), polynomials can: for every continuous \(g\colon B\to\R\) and every \(\delta>0\) there is a polynomial \(f\) with \(\lvert f(x)-g(x)\rvert<\delta\) for all \(x\in B\) \cite{weierstrass1885,stone1948}.
+Write \(\mathcal{H}_p\) for that class.
+
+Every \(f\in\mathcal{H}_p\) is linear in a monomial coordinate.
+One variable, every degree:
+\begin{equation}
+f(x)=\sum_{k\in\N} w_k x^k = \langle w,\tilde\varphi(x)\rangle,
+\qquad
+\tilde\varphi(x)=(1,x,x^2,x^3,\ldots).
+\label{eq:phi-1d}
+\end{equation}
+In \(d\) variables the same statement uses one index per coordinate,
+\begin{equation}
+f(x)=\sum_{\alpha\in\N^d} w_\alpha x^\alpha = \langle w,\tilde\varphi(x)\rangle.
+\label{eq:phi-d}
+\end{equation}
+Raw monomials are unusable as features: at \(x=1\) and \(w=(1,1,\ldots)\) the inner product diverges, and for \(d=100\) the monomials of degree \(5\) already number almost \(10^8\).
+
+Scale each monomial by a Gaussian bump and a factorial,
+\begin{equation}
+\varphi(x)
+= e^{-\lVert x\rVert^2/2}
+\Biggl[\frac{x^\alpha}{\sqrt{\alpha!}}\Biggr]_{\alpha\in\N^d}.
+\label{eq:phi}
+\end{equation}
+Then \(\lVert\varphi(x)\rVert=1\) for every \(x\), there is no degree cutoff, and the model remains a universal approximator.
+The fit is still linear regression on features,
+\begin{equation}
+f(x)=\langle w,\varphi(x)\rangle.
+\label{eq:poly-fit}
+\end{equation}
+The one-variable map is the same formula with \(\lVert x\rVert^2=x^2\) and \(\alpha=k\).

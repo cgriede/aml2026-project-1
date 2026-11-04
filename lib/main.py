@@ -17,12 +17,22 @@ from GLOBAL import *
 def _cv_scores(X, y):
     kf = KFold(n_splits=CV_FOLDS, shuffle=True, random_state=RANDOM_STATE)
     ridge_scores, xgb_scores, xgb_best = [], [], []
+    n = len(X)
+    y_oof = np.full(n, np.nan)
+    ridge_oof = np.full(n, np.nan)
+    xgb_oof = np.full(n, np.nan)
     for fold, (tr, te) in enumerate(kf.split(X)):
         X_tr, X_te = X.iloc[tr], X.iloc[te]
         y_tr, y_te = y.iloc[tr], y.iloc[te]
         trainer = Trainer(X_tr, y_tr)
         ridge = trainer.train("ridge")
         xgb = trainer.train("xgboost", X_val=X_te, y_val=y_te)
+        ridge_pred = np.ravel(ridge.predict(X_te))
+        xgb_pred = np.ravel(xgb.predict(X_te))
+        y_te_v = np.ravel(y_te)
+        y_oof[te] = y_te_v
+        ridge_oof[te] = ridge_pred
+        xgb_oof[te] = xgb_pred
         ridge_scores.append(Evaluator(ridge, X_te, y_te).evaluate())
         xgb_scores.append(Evaluator(xgb, X_te, y_te).evaluate())
         xgb_best.append(int(xgb.best_iteration))
@@ -30,27 +40,42 @@ def _cv_scores(X, y):
             f"Fold {fold}: Ridge {ridge_scores[-1]:.4f}  "
             f"XGB {xgb_scores[-1]:.4f}  best_iteration {xgb_best[-1]}"
         )
-    return np.array(ridge_scores), np.array(xgb_scores), np.array(xgb_best)
+    oof = {
+        "y": y_oof,
+        "pred": {"ridge": ridge_oof, "xgboost": xgb_oof},
+        "scores": {
+            "ridge": float(np.mean(ridge_scores)),
+            "xgboost": float(np.mean(xgb_scores)),
+        },
+    }
+    return np.array(ridge_scores), np.array(xgb_scores), np.array(xgb_best), oof
 
 
 def main():
+    print(
+        f"ridge alpha {RIDGE_ALPHA}  "
+        f"xgb depth {XGB_MAX_DEPTH}  lr {XGB_LEARNING_RATE}  "
+        f"min_child {XGB_MIN_CHILD_WEIGHT}  subsample {XGB_SUBSAMPLE}  "
+        f"colsample {XGB_COLSAMPLE_BYTREE}  early_stop {XGB_EARLY_STOPPING_ROUNDS}  "
+        f"cap {XGB_N_ESTIMATORS}"
+    )
     X_train, y_train, X_test = load()
 
     X_train, drop_cols = clean(X_train)
     X_test, _ = clean(X_test, drop_cols)
 
-    if DROP_OUTLIERS:
-        X_train, y_train = remove_outliers(X_train, y_train)
-
     X_train, y_train, scaler = scale(X_train, y_train)
     X_test, _, _ = scale(X_test, None, scaler)
+
+    X_train, y_train = remove_outliers(X_train, y_train, methods=METHODS_OUTLIERS)
+
 
     X_train, y_train, selected_cols = select_features(X_train, y_train)
     X_test, _, _ = select_features(X_test, None, selected_cols)
 
     print(f"shape after selection ({FS_METHOD}): train {X_train.shape}, test {X_test.shape}")
 
-    ridge_scores, xgb_scores, xgb_best = _cv_scores(X_train, y_train)
+    ridge_scores, xgb_scores, xgb_best, oof = _cv_scores(X_train, y_train)
     n_trees = int(np.median(xgb_best)) + 1
     print(
         f"Ridge CV: {ridge_scores.mean():.4f} ± {ridge_scores.std():.4f}  {np.round(ridge_scores, 4)}"
@@ -90,6 +115,7 @@ def main():
             "kaggle_public": kaggle_public,
         },
         models=[baseline_model, xgb],
+        oof=oof,
     )
 
 

@@ -1,0 +1,31 @@
+\section{Risk}
+\label{sec:risk}
+
+Unknown regression function \(f^*\colon\R^d\to\R\).
+Training pairs \((x_i,y_i)\), \(i\le n\), drawn from \(p^*\), with
+\begin{equation}
+y_i = f^*(x_i)+\varepsilon_i^*,\qquad \varepsilon_i^*\sim\mathcal{N}(0,\sigma^2).
+\label{eq:obs}
+\end{equation}
+The same model is used for a future sample \((x_i^*,y_i^*)\), \(i\le m\).
+
+The quantity to minimize on future data, and its expectation, are
+\begin{align}
+\hat R_*(f)
+&= \frac1m\sum_{i\le m}\bigl(y_i^*-f(x_i^*)\bigr)^2,
+\label{eq:future}\\
+R(f)
+&= \E_{(X,Y)\sim p^*}\bigl[(Y-f(X))^2\bigr].
+\label{eq:risk}
+\end{align}
+Under \eqref{eq:obs} the expected risk splits into approximation and noise,
+\begin{equation}
+R(f)
+= \E\bigl[(f(X)-f^*(X))^2\bigr] + \sigma^2.
+\label{eq:risk-split}
+\end{equation}
+The training substitute is the empirical risk
+\begin{equation}
+\hat R(f) = \frac1n\sum_{i\le n}\bigl(y_i-f(x_i)\bigr)^2.
+\label{eq:empirical}
+\end{equation}

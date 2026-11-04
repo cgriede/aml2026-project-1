@@ -1,6 +1,6 @@
 import numpy as np
 
-from GLOBAL import XGB_SEEDS
+from GLOBAL import XGB_N_ESTIMATORS, XGB_SEEDS
 
 
 class MeanRegressor:
@@ -19,7 +19,7 @@ class MeanRegressor:
         return {"n_models": len(self.models), **self.models[0].get_params()}
 
 
-def fit(X, y, X_val=None, y_val=None, n_estimators=2000):
+def fit(X, y, X_val=None, y_val=None, n_estimators=XGB_N_ESTIMATORS):
     from .xgboost import fit as fit_xgb
 
     models = [

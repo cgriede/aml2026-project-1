@@ -16,7 +16,8 @@ from GLOBAL import (
 )
 
 
-def select(X, y):
+def lifetime_scores(X, y) -> tuple[pd.Series, list[str]]:
+    """Ridge Monte Carlo lifetime weights and the final survivor list."""
     rng = np.random.default_rng(RANDOM_STATE)
     y = np.ravel(y)
     all_cols = list(X.columns)
@@ -32,16 +33,15 @@ def select(X, y):
     X_tr = pd.DataFrame(scaler.fit_transform(X_tr), index=X_tr.index, columns=X_tr.columns)
     X_sc = pd.DataFrame(scaler.transform(X_sc), index=X_sc.index, columns=X_sc.columns)
 
-    results = []
     for rnd in range(FS_N_ROUNDS):
-        k = min(FS_SUBSET_SIZE, len(active))
-        if k < 2 or len(active) <= k:
-            print(f"Round {rnd}: stop, {len(active)} features left (k={k})")
+        width = min(FS_SUBSET_SIZE, len(active))
+        if width < 2 or len(active) <= width:
+            print(f"Round {rnd}: stop, {len(active)} features left (k={width})")
             break
 
         results = []
         for _ in range(FS_N_TRIALS):
-            chosen = rng.choice(active, size=k, replace=False)
+            chosen = rng.choice(active, size=width, replace=False)
             model = Ridge(solver="svd")
             model.fit(X_tr[chosen], y_tr)
             score = r2_score(y_sc, model.predict(X_sc[chosen]))
@@ -63,9 +63,9 @@ def select(X, y):
             lifetime[c] += w
 
         next_active = [c for c in active if delta[c] >= 0]
-        if len(next_active) < k:
+        if len(next_active) < width:
             ranked = sorted(active, key=lambda c: delta[c], reverse=True)
-            next_active = ranked[: max(k, len(active) // 2)]
+            next_active = ranked[: max(width, len(active) // 2)]
         r2s = np.array([s for s, _ in results])
         print(
             f"Round {rnd}: {len(active)}→{len(next_active)}  "
@@ -85,5 +85,15 @@ def select(X, y):
         row["alive"] = c in active
         rows.append(row)
     print(pd.DataFrame(rows).to_string(index=False))
-    print(f"Selected {len(active)} features after {FS_N_ROUNDS} rounds")
-    return active
+    return pd.Series(lifetime), active
+
+
+def select(X, y, k: int | None = None):
+    scores, active = lifetime_scores(X, y)
+    if k is None:
+        print(f"Selected {len(active)} features after {FS_N_ROUNDS} rounds")
+        return active
+    k = min(k, X.shape[1])
+    keep = scores.nlargest(k).index.tolist()
+    print(f"monte_carlo select: top {k}/{X.shape[1]} by lifetime after {FS_N_ROUNDS} rounds")
+    return keep

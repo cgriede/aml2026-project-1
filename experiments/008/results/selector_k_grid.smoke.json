@@ -1,0 +1,411 @@
+{
+  "ts": "2026-11-04T16:16:13Z",
+  "smoke": true,
+  "model": "svr",
+  "selectors": [
+    "corr",
+    "mi",
+    "monte_carlo",
+    "cluster",
+    "mrmr",
+    "rrelieff"
+  ],
+  "ks": [
+    8,
+    16
+  ],
+  "folds_n": 2,
+  "verdict": {
+    "best": "corr@k8",
+    "base": "corr@k150",
+    "vs_base": null,
+    "table": {
+      "corr@k8": {
+        "method": "corr",
+        "k": 8,
+        "r2_mean": 0.2682303335958169,
+        "r2_std": 0.002388433565415691,
+        "r2_folds": [
+          0.2665414560252979,
+          0.2699192111663359
+        ],
+        "rmse_mean": 8.082907442558204,
+        "k_effective": [
+          8,
+          8
+        ]
+      },
+      "corr@k16": {
+        "method": "corr",
+        "k": 16,
+        "r2_mean": 0.26802298611713826,
+        "r2_std": 0.003547514580011059,
+        "r2_folds": [
+          0.2655145145012543,
+          0.27053145773302223
+        ],
+        "rmse_mean": 8.083919068804288,
+        "k_effective": [
+          16,
+          16
+        ]
+      },
+      "mi@k8": {
+        "method": "mi",
+        "k": 8,
+        "r2_mean": 0.20782402897733543,
+        "r2_std": 0.12358303992847641,
+        "r2_folds": [
+          0.29521043455040896,
+          0.1204376234042619
+        ],
+        "rmse_mean": 8.410383496491265,
+        "k_effective": [
+          8,
+          8
+        ]
+      },
+      "mi@k16": {
+        "method": "mi",
+        "k": 16,
+        "r2_mean": 0.20270021836232005,
+        "r2_std": 0.06665751289854267,
+        "r2_folds": [
+          0.24983419774990934,
+          0.15556623897473076
+        ],
+        "rmse_mean": 8.440653478373012,
+        "k_effective": [
+          16,
+          16
+        ]
+      },
+      "monte_carlo@k8": {
+        "method": "monte_carlo",
+        "k": 8,
+        "r2_mean": 0.06713825550509911,
+        "r2_std": 0.031823965262756757,
+        "r2_folds": [
+          0.04463531386355868,
+          0.08964119714663954
+        ],
+        "rmse_mean": 9.122728328203568,
+        "k_effective": [
+          8,
+          8
+        ]
+      },
+      "monte_carlo@k16": {
+        "method": "monte_carlo",
+        "k": 16,
+        "r2_mean": 0.07808810695754465,
+        "r2_std": 0.014678381951279688,
+        "r2_folds": [
+          0.08846729037214074,
+          0.06770892354294855
+        ],
+        "rmse_mean": 9.074050649253055,
+        "k_effective": [
+          16,
+          16
+        ]
+      },
+      "cluster@k8": {
+        "method": "cluster",
+        "k": 8,
+        "r2_mean": 0.2387333013504142,
+        "r2_std": 0.032688172433531004,
+        "r2_folds": [
+          0.21561927295806926,
+          0.26184732974275915
+        ],
+        "rmse_mean": 8.240014611981001,
+        "k_effective": [
+          8,
+          8
+        ]
+      },
+      "cluster@k16": {
+        "method": "cluster",
+        "k": 16,
+        "r2_mean": 0.2522859567751976,
+        "r2_std": 0.0053961936588081474,
+        "r2_folds": [
+          0.24847027164645852,
+          0.2561016419039367
+        ],
+        "rmse_mean": 8.17014965401457,
+        "k_effective": [
+          16,
+          16
+        ]
+      },
+      "mrmr@k8": {
+        "method": "mrmr",
+        "k": 8,
+        "r2_mean": 0.22092760296794328,
+        "r2_std": 0.015141292916866387,
+        "r2_folds": [
+          0.21022109207049522,
+          0.23163411386539134
+        ],
+        "rmse_mean": 8.338532904887142,
+        "k_effective": [
+          8,
+          8
+        ]
+      },
+      "mrmr@k16": {
+        "method": "mrmr",
+        "k": 16,
+        "r2_mean": 0.22046095667671617,
+        "r2_std": 0.009960015455885957,
+        "r2_folds": [
+          0.21341816220713639,
+          0.22750375114629595
+        ],
+        "rmse_mean": 8.341692906063244,
+        "k_effective": [
+          16,
+          16
+        ]
+      },
+      "rrelieff@k8": {
+        "method": "rrelieff",
+        "k": 8,
+        "r2_mean": 0.23644946388515858,
+        "r2_std": 0.03646142825411687,
+        "r2_folds": [
+          0.21066734071492577,
+          0.2622315870553914
+        ],
+        "rmse_mean": 8.251745643838223,
+        "k_effective": [
+          8,
+          8
+        ]
+      },
+      "rrelieff@k16": {
+        "method": "rrelieff",
+        "k": 16,
+        "r2_mean": 0.2288781809619167,
+        "r2_std": 0.008883935804962812,
+        "r2_folds": [
+          0.23516007221323187,
+          0.22259628971060152
+        ],
+        "rmse_mean": 8.298551623329192,
+        "k_effective": [
+          16,
+          16
+        ]
+      }
+    }
+  },
+  "folds": [
+    {
+      "fold": 0,
+      "n_culled": 811,
+      "scores": {
+        "corr@k8": {
+          "n_features": 8,
+          "r2": 0.2665414560252979,
+          "rmse": 7.865367185749984,
+          "method": "corr",
+          "k_requested": 8,
+          "k_effective": 8
+        },
+        "corr@k16": {
+          "n_features": 16,
+          "r2": 0.2655145145012543,
+          "rmse": 7.870871550577038,
+          "method": "corr",
+          "k_requested": 16,
+          "k_effective": 16
+        },
+        "mi@k8": {
+          "n_features": 8,
+          "r2": 0.29521043455040896,
+          "rmse": 7.710116650971309,
+          "method": "mi",
+          "k_requested": 8,
+          "k_effective": 8
+        },
+        "mi@k16": {
+          "n_features": 16,
+          "r2": 0.24983419774990934,
+          "rmse": 7.954444335732399,
+          "method": "mi",
+          "k_requested": 16,
+          "k_effective": 16
+        },
+        "monte_carlo@k8": {
+          "n_features": 8,
+          "r2": 0.04463531386355868,
+          "rmse": 8.976681328363496,
+          "method": "monte_carlo",
+          "k_requested": 8,
+          "k_effective": 8
+        },
+        "monte_carlo@k16": {
+          "n_features": 16,
+          "r2": 0.08846729037214074,
+          "rmse": 8.768339256278098,
+          "method": "monte_carlo",
+          "k_requested": 16,
+          "k_effective": 16
+        },
+        "cluster@k8": {
+          "n_features": 8,
+          "r2": 0.21561927295806926,
+          "rmse": 8.133822167393868,
+          "method": "cluster",
+          "k_requested": 8,
+          "k_effective": 8
+        },
+        "cluster@k16": {
+          "n_features": 16,
+          "r2": 0.24847027164645852,
+          "rmse": 7.96167230271483,
+          "method": "cluster",
+          "k_requested": 16,
+          "k_effective": 16
+        },
+        "mrmr@k8": {
+          "n_features": 8,
+          "r2": 0.21022109207049522,
+          "rmse": 8.161763036051637,
+          "method": "mrmr",
+          "k_requested": 8,
+          "k_effective": 8
+        },
+        "mrmr@k16": {
+          "n_features": 16,
+          "r2": 0.21341816220713639,
+          "rmse": 8.145226642503065,
+          "method": "mrmr",
+          "k_requested": 16,
+          "k_effective": 16
+        },
+        "rrelieff@k8": {
+          "n_features": 8,
+          "r2": 0.21066734071492577,
+          "rmse": 8.15945689044284,
+          "method": "rrelieff",
+          "k_requested": 8,
+          "k_effective": 8
+        },
+        "rrelieff@k16": {
+          "n_features": 16,
+          "r2": 0.23516007221323187,
+          "rmse": 8.03186669542838,
+          "method": "rrelieff",
+          "k_requested": 16,
+          "k_effective": 16
+        }
+      }
+    },
+    {
+      "fold": 1,
+      "n_culled": 813,
+      "scores": {
+        "corr@k8": {
+          "n_features": 8,
+          "r2": 0.2699192111663359,
+          "rmse": 8.300447699366423,
+          "method": "corr",
+          "k_requested": 8,
+          "k_effective": 8
+        },
+        "corr@k16": {
+          "n_features": 16,
+          "r2": 0.27053145773302223,
+          "rmse": 8.29696658703154,
+          "method": "corr",
+          "k_requested": 16,
+          "k_effective": 16
+        },
+        "mi@k8": {
+          "n_features": 8,
+          "r2": 0.1204376234042619,
+          "rmse": 9.11065034201122,
+          "method": "mi",
+          "k_requested": 8,
+          "k_effective": 8
+        },
+        "mi@k16": {
+          "n_features": 16,
+          "r2": 0.15556623897473076,
+          "rmse": 8.926862621013624,
+          "method": "mi",
+          "k_requested": 16,
+          "k_effective": 16
+        },
+        "monte_carlo@k8": {
+          "n_features": 8,
+          "r2": 0.08964119714663954,
+          "rmse": 9.26877532804364,
+          "method": "monte_carlo",
+          "k_requested": 8,
+          "k_effective": 8
+        },
+        "monte_carlo@k16": {
+          "n_features": 16,
+          "r2": 0.06770892354294855,
+          "rmse": 9.37976204222801,
+          "method": "monte_carlo",
+          "k_requested": 16,
+          "k_effective": 16
+        },
+        "cluster@k8": {
+          "n_features": 8,
+          "r2": 0.26184732974275915,
+          "rmse": 8.346207056568135,
+          "method": "cluster",
+          "k_requested": 8,
+          "k_effective": 8
+        },
+        "cluster@k16": {
+          "n_features": 16,
+          "r2": 0.2561016419039367,
+          "rmse": 8.37862700531431,
+          "method": "cluster",
+          "k_requested": 16,
+          "k_effective": 16
+        },
+        "mrmr@k8": {
+          "n_features": 8,
+          "r2": 0.23163411386539134,
+          "rmse": 8.515302773722645,
+          "method": "mrmr",
+          "k_requested": 8,
+          "k_effective": 8
+        },
+        "mrmr@k16": {
+          "n_features": 16,
+          "r2": 0.22750375114629595,
+          "rmse": 8.538159169623421,
+          "method": "mrmr",
+          "k_requested": 16,
+          "k_effective": 16
+        },
+        "rrelieff@k8": {
+          "n_features": 8,
+          "r2": 0.2622315870553914,
+          "rmse": 8.344034397233605,
+          "method": "rrelieff",
+          "k_requested": 8,
+          "k_effective": 8
+        },
+        "rrelieff@k16": {
+          "n_features": 16,
+          "r2": 0.22259628971060152,
+          "rmse": 8.565236551230003,
+          "method": "rrelieff",
+          "k_requested": 16,
+          "k_effective": 16
+        }
+      }
+    }
+  ]
+}

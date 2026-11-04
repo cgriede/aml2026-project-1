@@ -1,0 +1,86 @@
+{
+  "n": 9,
+  "rows": [
+    {
+      "idx": 167,
+      "age": 44.0,
+      "nan_count": 49.0,
+      "fold": 1,
+      "corr_xgb_resid": 34.03327178955078,
+      "rrelieff_svr_resid": 29.201767519529426,
+      "mean_abs_err": 31.617519654540104
+    },
+    {
+      "idx": 3,
+      "age": 52.0,
+      "nan_count": 66.0,
+      "fold": 1,
+      "corr_xgb_resid": 28.050827026367188,
+      "rrelieff_svr_resid": 23.286347319434554,
+      "mean_abs_err": 25.66858717290087
+    },
+    {
+      "idx": 134,
+      "age": 49.0,
+      "nan_count": 71.0,
+      "fold": 1,
+      "corr_xgb_resid": 23.81157684326172,
+      "rrelieff_svr_resid": 22.304759722776907,
+      "mean_abs_err": 23.058168283019313
+    },
+    {
+      "idx": 101,
+      "age": 42.0,
+      "nan_count": 62.0,
+      "fold": 0,
+      "corr_xgb_resid": 19.27733612060547,
+      "rrelieff_svr_resid": 26.512520492372175,
+      "mean_abs_err": 22.894928306488822
+    },
+    {
+      "idx": 145,
+      "age": 50.0,
+      "nan_count": 68.0,
+      "fold": 0,
+      "corr_xgb_resid": 22.041976928710938,
+      "rrelieff_svr_resid": 18.550836683818872,
+      "mean_abs_err": 20.296406806264905
+    },
+    {
+      "idx": 164,
+      "age": 92.0,
+      "nan_count": 54.0,
+      "fold": 0,
+      "corr_xgb_resid": -17.835411071777344,
+      "rrelieff_svr_resid": -19.933515342870066,
+      "mean_abs_err": 18.884463207323705
+    },
+    {
+      "idx": 64,
+      "age": 85.0,
+      "nan_count": 72.0,
+      "fold": 0,
+      "corr_xgb_resid": -20.70507049560547,
+      "rrelieff_svr_resid": -12.580592793450066,
+      "mean_abs_err": 16.642831644527767
+    },
+    {
+      "idx": 70,
+      "age": 53.0,
+      "nan_count": 64.0,
+      "fold": 0,
+      "corr_xgb_resid": 17.60944366455078,
+      "rrelieff_svr_resid": 15.641426029481593,
+      "mean_abs_err": 16.625434847016187
+    },
+    {
+      "idx": 156,
+      "age": 49.0,
+      "nan_count": 58.0,
+      "fold": 0,
+      "corr_xgb_resid": 11.131786346435547,
+      "rrelieff_svr_resid": 20.86142090520383,
+      "mean_abs_err": 15.996603625819688
+    }
+  ]
+}

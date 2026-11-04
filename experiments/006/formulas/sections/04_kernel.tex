@@ -1,0 +1,46 @@
+\section{The kernel trick}
+\label{sec:kernel}
+
+Stack the feature rows \(\Phi\in\R^{n\times\infty}\), with row \(i\) equal to \(\varphi(x_i)^\top\).
+Polynomial least squares asks for
+\begin{equation}
+\hat w_\infty
+= \argmin_{w\in\R^\infty}\lVert\Phi w-y\rVert^2.
+\label{eq:poly-ls}
+\end{equation}
+The normal equation \((\Phi^\top\Phi)^{-1}\Phi^\top y\) is an infinite matrix.
+The minimum-norm solution never forms it,
+\begin{equation}
+\hat w_\infty = \Phi^\top(\Phi\Phi^\top)^{-1} y.
+\label{eq:min-norm}
+\end{equation}
+(The lecture treats the usual normal equation as shorthand: \(\Phi^\top\Phi\) has no inverse. Equation~\eqref{eq:min-norm} is the exact minimum-norm solution.)
+
+Prediction at \(x_*\in\R^d\) uses only \(n\times n\) kernel entries.
+The sum over all scaled monomials collapses to the Gaussian kernel,
+\begin{equation}
+k(x,x')
+= \langle\varphi(x),\varphi(x')\rangle
+= \exp\Bigl(-\frac12\lVert x-x'\rVert^2\Bigr).
+\label{eq:gauss}
+\end{equation}
+With \(K_{ij}=k(x_i,x_j)\) and \(k_{*,i}=k(x_*,x_i)\),
+\begin{equation}
+\hat f(x_*)
+= \varphi(x_*)^\top\Phi^\top(\Phi\Phi^\top)^{-1} y
+= k_*^\top K^{-1} y.
+\label{eq:k-pred}
+\end{equation}
+The same identity with a ridge penalty is exact, not a minimum-norm convention,
+\begin{align}
+\hat w_\infty
+&= \argmin_{w\in\R^\infty}
+\Bigl(\lVert\Phi w-y\rVert^2+\lambda\lVert w\rVert^2\Bigr)
+= \Phi^\top(\Phi\Phi^\top+\lambda I)^{-1} y,
+\label{eq:k-ridge-w}\\
+\hat f(x_*)
+&= k_*^\top (K+\lambda I)^{-1} y.
+\label{eq:k-ridge}
+\end{align}
+Algorithm: build \(K\) from the training points, solve \((K+\lambda I)\beta=y\), then for each test point build \(k_*\) and return \(k_*^\top\beta\).
+Cost \(O(n^2 d+n^3)\). At \(n=10^6\) that is about \(10^{18}\) operations and on the order of \(8\,\mathrm{TB}\) for \(K\).

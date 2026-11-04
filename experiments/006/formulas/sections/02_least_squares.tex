@@ -1,0 +1,72 @@
+\section{Least squares and ridge}
+\label{sec:ls}
+
+Two routes give the same linear estimator.
+Maximum likelihood with \(y_i\sim\mathcal{N}(\theta^\top x_i,\sigma^2)\) is
+\begin{equation}
+\hat\theta
+= \argmin_{\theta\in\R^d}\sum_{i\le n}\bigl(y_i-\theta^\top x_i\bigr)^2,
+\label{eq:mle}
+\end{equation}
+because the Gaussian likelihood is a decreasing function of that sum.
+
+Statistical learning restricts \(\hat R\) to a hypothesis class and drops the factor \(1/n\), which does not change the minimizer.
+The linear class and the ordinary least-squares estimator (OLSE) are
+\begin{align}
+\mathcal{H}_l
+&= \bigl\{f\colon\R^d\to\R \mid f(x)=w^\top x \text{ for some } w\in\R^d\bigr\},
+\label{eq:Hl}\\
+\hat w
+&= \argmin_{w\in\R^d}\sum_{i\le n}\bigl(y_i-w^\top x_i\bigr)^2
+= (X^\top X)^{-1}X^\top y,
+\label{eq:olse}
+\end{align}
+with design matrix and response
+\begin{equation}
+X =
+\begin{bmatrix}
+x_1^\top \\ \vdots \\ x_n^\top
+\end{bmatrix}
+\in\R^{n\times d},
+\qquad
+y =
+\begin{bmatrix}
+y_1 \\ \vdots \\ y_n
+\end{bmatrix}
+\in\R^n.
+\label{eq:design}
+\end{equation}
+So \(\hat\theta_{\mathrm{MLE}}=\hat w_{\mathrm{OLSE}}\).
+Building \(X^\top X\), building \(X^\top y\), and solving the \(d\times d\) system cost
+\(O(nd^2+d^3)\).
+
+If \(y_i=x_i^\top w^*+\varepsilon_i\) with \(\varepsilon_i\sim\mathcal{N}(0,\sigma^2)\), the OLSE is unbiased,
+\begin{equation}
+\E_{y\mid X}[\hat w] = w^*.
+\label{eq:unbiased}
+\end{equation}
+Among unbiased estimators of the form \(\tilde w=Cy\), it has the smallest variance at every test point (Gauss-Markov):
+\begin{equation}
+\mathrm{Var}\bigl(x_*^\top\hat w\bigr)
+\le \mathrm{Var}\bigl(x_*^\top\tilde w\bigr).
+\label{eq:gm}
+\end{equation}
+Pointwise error still splits as
+\begin{equation}
+\E\bigl[(y_*-\hat f(x_*))^2\bigr]
+= \bigl(\E[\hat f(x_*)]-f^*(x_*)\bigr)^2
++ \mathrm{Var}\bigl(\hat f(x_*)\bigr)
++ \sigma^2.
+\label{eq:bv}
+\end{equation}
+The OLSE term in the middle is often large.
+Ridge pays a little bias to shrink it,
+\begin{align}
+\hat R_r(w)
+&= \lVert y-Xw\rVert^2 + \lambda\lVert w\rVert^2,
+\label{eq:ridge-obj}\\
+\hat w_r
+&= \argmin_w \hat R_r(w)
+= (X^\top X+\lambda I)^{-1}X^\top y.
+\label{eq:ridge}
+\end{align}

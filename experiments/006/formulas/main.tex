@@ -1,0 +1,45 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,mathtools,booktabs,geometry,xurl,enumitem}
+\geometry{margin=2.3cm}
+\setlist[itemize]{nosep,leftmargin=1.2em}
+\renewcommand{\arraystretch}{1.3}
+
+\hyphenation{ap-prox-i-ma-tor ap-prox-i-ma-tion}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\E}{\mathbb{E}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\title{Kernelized polynomial regression\\[0.3em]
+\large Formula overview}
+\author{Transcribed from Carlos Cotrini,
+\emph{Kernelized polynomial regression},\\
+Advanced Machine Learning, ETH Zurich, 5 and 8 October 2026}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\noindent
+Notation follows the lecture. \(\N=\{0,1,2,\ldots\}\).
+A multi-index \(\alpha=(\alpha_1,\ldots,\alpha_d)\in\N^d\) has
+\(x^\alpha=\prod_{i\le d}x_i^{\alpha_i}\) and \(\alpha!=\prod_{i\le d}\alpha_i!\).
+
+\tableofcontents
+\vspace{1em}
+
+\input{sections/01_risk}
+\input{sections/02_least_squares}
+\input{sections/03_polynomial}
+\input{sections/04_kernel}
+\input{sections/05_random}
+\input{sections/06_sources}
+
+{\small
+\bibliographystyle{plain}
+\bibliography{references}
+}
+
+\end{document}

@@ -1,0 +1,1166 @@
+{
+  "ts": "2026-11-04T16:18:00Z",
+  "smoke": false,
+  "model": "svr",
+  "selectors": [
+    "corr",
+    "mi",
+    "monte_carlo",
+    "cluster",
+    "mrmr",
+    "rrelieff"
+  ],
+  "ks": [
+    50,
+    100,
+    150
+  ],
+  "folds_n": 5,
+  "verdict": {
+    "best": "corr@k100",
+    "base": "corr@k150",
+    "vs_base": {
+      "mean": 0.013178267926034803,
+      "se": 0.001921155151392008,
+      "folds": [
+        0.013444179254051503,
+        0.008447150848003404,
+        0.013330684963089867,
+        0.01991937931192289,
+        0.010749945253106352
+      ]
+    },
+    "table": {
+      "corr@k50": {
+        "method": "corr",
+        "k": 50,
+        "r2_mean": 0.43089419325340533,
+        "r2_std": 0.03225336300717876,
+        "r2_folds": [
+          0.4722976719744486,
+          0.44760341578759366,
+          0.38607272332382814,
+          0.41831650579960755,
+          0.430180649381549
+        ],
+        "rmse_mean": 7.316886328655057,
+        "k_effective": [
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      },
+      "corr@k100": {
+        "method": "corr",
+        "k": 100,
+        "r2_mean": 0.4380733963271311,
+        "r2_std": 0.02691422709232583,
+        "r2_folds": [
+          0.46499981332210927,
+          0.451688941186031,
+          0.39366485719259847,
+          0.4380709773552367,
+          0.44194239257968004
+        ],
+        "rmse_mean": 7.269753255167221,
+        "k_effective": [
+          100,
+          100,
+          100,
+          100,
+          100
+        ]
+      },
+      "corr@k150": {
+        "method": "corr",
+        "k": 150,
+        "r2_mean": 0.42489512840109633,
+        "r2_std": 0.027920390438297044,
+        "r2_folds": [
+          0.45155563406805777,
+          0.4432417903380276,
+          0.3803341722295086,
+          0.4181515980433138,
+          0.4311924473265737
+        ],
+        "rmse_mean": 7.355129452289653,
+        "k_effective": [
+          150,
+          150,
+          150,
+          150,
+          150
+        ]
+      },
+      "mi@k50": {
+        "method": "mi",
+        "k": 50,
+        "r2_mean": 0.42899871365737363,
+        "r2_std": 0.03443293792083191,
+        "r2_folds": [
+          0.47444420452122027,
+          0.4319718463715887,
+          0.3777505790691269,
+          0.43477250187590866,
+          0.42605443644902374
+        ],
+        "rmse_mean": 7.326803351384477,
+        "k_effective": [
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      },
+      "mi@k100": {
+        "method": "mi",
+        "k": 100,
+        "r2_mean": 0.41812569503527736,
+        "r2_std": 0.03584143266327224,
+        "r2_folds": [
+          0.44967854669101015,
+          0.432437400350162,
+          0.3613569191002026,
+          0.4054686782545466,
+          0.44168693078046517
+        ],
+        "rmse_mean": 7.3973683255588725,
+        "k_effective": [
+          100,
+          100,
+          100,
+          100,
+          100
+        ]
+      },
+      "mi@k150": {
+        "method": "mi",
+        "k": 150,
+        "r2_mean": 0.4006984396796172,
+        "r2_std": 0.036659431605594255,
+        "r2_folds": [
+          0.41372293174780983,
+          0.4175748137812665,
+          0.3443015940761218,
+          0.38758752531234963,
+          0.440305333480538
+        ],
+        "rmse_mean": 7.506802954573992,
+        "k_effective": [
+          150,
+          150,
+          150,
+          150,
+          150
+        ]
+      },
+      "monte_carlo@k50": {
+        "method": "monte_carlo",
+        "k": 50,
+        "r2_mean": 0.23114260651941726,
+        "r2_std": 0.07219901975516727,
+        "r2_folds": [
+          0.16500960091484618,
+          0.1665862473688824,
+          0.2914186586029611,
+          0.21068295292768746,
+          0.3220155727827091
+        ],
+        "rmse_mean": 8.494282137392425,
+        "k_effective": [
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      },
+      "monte_carlo@k100": {
+        "method": "monte_carlo",
+        "k": 100,
+        "r2_mean": 0.24898986044052268,
+        "r2_std": 0.06124939758352541,
+        "r2_folds": [
+          0.19922215218370665,
+          0.21778843829799155,
+          0.2653028217157881,
+          0.2134973047812495,
+          0.34913858522387764
+        ],
+        "rmse_mean": 8.398841836563594,
+        "k_effective": [
+          100,
+          100,
+          100,
+          100,
+          100
+        ]
+      },
+      "monte_carlo@k150": {
+        "method": "monte_carlo",
+        "k": 150,
+        "r2_mean": 0.24462039161391158,
+        "r2_std": 0.05176773487456825,
+        "r2_folds": [
+          0.22845042589104358,
+          0.2292337988676909,
+          0.23210578329361709,
+          0.1992259031717054,
+          0.3340860468455009
+        ],
+        "rmse_mean": 8.42677577846933,
+        "k_effective": [
+          150,
+          150,
+          150,
+          150,
+          150
+        ]
+      },
+      "cluster@k50": {
+        "method": "cluster",
+        "k": 50,
+        "r2_mean": 0.43072858335226716,
+        "r2_std": 0.03368033184871452,
+        "r2_folds": [
+          0.46482280236268725,
+          0.45255771543661305,
+          0.3769117314817322,
+          0.42950209759225,
+          0.42984856988805364
+        ],
+        "rmse_mean": 7.316831929329004,
+        "k_effective": [
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      },
+      "cluster@k100": {
+        "method": "cluster",
+        "k": 100,
+        "r2_mean": 0.40405682594085696,
+        "r2_std": 0.03353867622109725,
+        "r2_folds": [
+          0.42407329786760717,
+          0.42529998123184476,
+          0.3479378691830832,
+          0.3975634294316086,
+          0.4254095519901411
+        ],
+        "rmse_mean": 7.486240065875917,
+        "k_effective": [
+          100,
+          100,
+          100,
+          100,
+          100
+        ]
+      },
+      "cluster@k150": {
+        "method": "cluster",
+        "k": 150,
+        "r2_mean": 0.3585041327600266,
+        "r2_std": 0.038175424745449084,
+        "r2_folds": [
+          0.38052232151533694,
+          0.3685929699064354,
+          0.2956161477481263,
+          0.3537174647686694,
+          0.39407175986156473
+        ],
+        "rmse_mean": 7.76599075200951,
+        "k_effective": [
+          150,
+          150,
+          150,
+          150,
+          150
+        ]
+      },
+      "mrmr@k50": {
+        "method": "mrmr",
+        "k": 50,
+        "r2_mean": 0.42442495980052647,
+        "r2_std": 0.030372096084313155,
+        "r2_folds": [
+          0.4601222148319699,
+          0.4178404211626441,
+          0.37831053996870134,
+          0.44003700129487033,
+          0.42581462174444684
+        ],
+        "rmse_mean": 7.355283117561311,
+        "k_effective": [
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      },
+      "mrmr@k100": {
+        "method": "mrmr",
+        "k": 100,
+        "r2_mean": 0.4178487682696591,
+        "r2_std": 0.03342221053851231,
+        "r2_folds": [
+          0.4546431747547811,
+          0.4074694967718676,
+          0.36756788024048526,
+          0.4199413140396391,
+          0.4396219755415228
+        ],
+        "rmse_mean": 7.397511222502781,
+        "k_effective": [
+          100,
+          100,
+          100,
+          100,
+          100
+        ]
+      },
+      "mrmr@k150": {
+        "method": "mrmr",
+        "k": 150,
+        "r2_mean": 0.4003079970912046,
+        "r2_std": 0.029985919003935827,
+        "r2_folds": [
+          0.42915344277851486,
+          0.3879026654867078,
+          0.35827331556674225,
+          0.39703957241184074,
+          0.4291709892122175
+        ],
+        "rmse_mean": 7.508844817638914,
+        "k_effective": [
+          150,
+          150,
+          150,
+          150,
+          150
+        ]
+      },
+      "rrelieff@k50": {
+        "method": "rrelieff",
+        "k": 50,
+        "r2_mean": 0.38793952522677655,
+        "r2_std": 0.04066362778439943,
+        "r2_folds": [
+          0.450212171291269,
+          0.38219159747323295,
+          0.3372787045379737,
+          0.3772780881889617,
+          0.3927370646424452
+        ],
+        "rmse_mean": 7.586232564994928,
+        "k_effective": [
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      },
+      "rrelieff@k100": {
+        "method": "rrelieff",
+        "k": 100,
+        "r2_mean": 0.4073577604391899,
+        "r2_std": 0.041781406628186996,
+        "r2_folds": [
+          0.45724019057250953,
+          0.42366987783624854,
+          0.3445165302551869,
+          0.3939815468666248,
+          0.4173806566653798
+        ],
+        "rmse_mean": 7.46528361709953,
+        "k_effective": [
+          100,
+          100,
+          100,
+          100,
+          100
+        ]
+      },
+      "rrelieff@k150": {
+        "method": "rrelieff",
+        "k": 150,
+        "r2_mean": 0.39834138513747985,
+        "r2_std": 0.04062879482845517,
+        "r2_folds": [
+          0.4405051480244936,
+          0.4199794090219836,
+          0.3337353970777993,
+          0.38918964269595924,
+          0.40829732886716397
+        ],
+        "rmse_mean": 7.521837077060335,
+        "k_effective": [
+          150,
+          150,
+          150,
+          150,
+          150
+        ]
+      }
+    }
+  },
+  "folds": [
+    {
+      "fold": 0,
+      "n_culled": 824,
+      "scores": {
+        "corr@k50": {
+          "n_features": 50,
+          "r2": 0.4722976719744486,
+          "rmse": 6.890691371567899,
+          "method": "corr",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "corr@k100": {
+          "n_features": 100,
+          "r2": 0.46499981332210927,
+          "rmse": 6.938175169627106,
+          "method": "corr",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "corr@k150": {
+          "n_features": 150,
+          "r2": 0.45155563406805777,
+          "rmse": 7.024810014950237,
+          "method": "corr",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "mi@k50": {
+          "n_features": 50,
+          "r2": 0.47444420452122027,
+          "rmse": 6.876662472509196,
+          "method": "mi",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "mi@k100": {
+          "n_features": 100,
+          "r2": 0.44967854669101015,
+          "rmse": 7.036821186587206,
+          "method": "mi",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "mi@k150": {
+          "n_features": 150,
+          "r2": 0.41372293174780983,
+          "rmse": 7.263061930590393,
+          "method": "mi",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "monte_carlo@k50": {
+          "n_features": 50,
+          "r2": 0.16500960091484618,
+          "rmse": 8.667803046548805,
+          "method": "monte_carlo",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "monte_carlo@k100": {
+          "n_features": 100,
+          "r2": 0.19922215218370665,
+          "rmse": 8.48837033430569,
+          "method": "monte_carlo",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "monte_carlo@k150": {
+          "n_features": 150,
+          "r2": 0.22845042589104358,
+          "rmse": 8.332018230724373,
+          "method": "monte_carlo",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "cluster@k50": {
+          "n_features": 50,
+          "r2": 0.46482280236268725,
+          "rmse": 6.9393228621936816,
+          "method": "cluster",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "cluster@k100": {
+          "n_features": 100,
+          "r2": 0.42407329786760717,
+          "rmse": 7.198663961134667,
+          "method": "cluster",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "cluster@k150": {
+          "n_features": 150,
+          "r2": 0.38052232151533694,
+          "rmse": 7.465882054098533,
+          "method": "cluster",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "mrmr@k50": {
+          "n_features": 50,
+          "r2": 0.4601222148319699,
+          "rmse": 6.969731092059905,
+          "method": "mrmr",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "mrmr@k100": {
+          "n_features": 100,
+          "r2": 0.4546431747547811,
+          "rmse": 7.005008554548195,
+          "method": "mrmr",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "mrmr@k150": {
+          "n_features": 150,
+          "r2": 0.42915344277851486,
+          "rmse": 7.166844583339083,
+          "method": "mrmr",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "rrelieff@k50": {
+          "n_features": 50,
+          "r2": 0.450212171291269,
+          "rmse": 7.033408697772699,
+          "method": "rrelieff",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "rrelieff@k100": {
+          "n_features": 100,
+          "r2": 0.45724019057250953,
+          "rmse": 6.988309554153512,
+          "method": "rrelieff",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "rrelieff@k150": {
+          "n_features": 150,
+          "r2": 0.4405051480244936,
+          "rmse": 7.09522775923316,
+          "method": "rrelieff",
+          "k_requested": 150,
+          "k_effective": 150
+        }
+      }
+    },
+    {
+      "fold": 1,
+      "n_culled": 826,
+      "scores": {
+        "corr@k50": {
+          "n_features": 50,
+          "r2": 0.44760341578759366,
+          "rmse": 6.960730767861017,
+          "method": "corr",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "corr@k100": {
+          "n_features": 100,
+          "r2": 0.451688941186031,
+          "rmse": 6.934942212297453,
+          "method": "corr",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "corr@k150": {
+          "n_features": 150,
+          "r2": 0.4432417903380276,
+          "rmse": 6.9881570837305995,
+          "method": "corr",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "mi@k50": {
+          "n_features": 50,
+          "r2": 0.4319718463715887,
+          "rmse": 7.05853015931961,
+          "method": "mi",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "mi@k100": {
+          "n_features": 100,
+          "r2": 0.432437400350162,
+          "rmse": 7.055636992512417,
+          "method": "mi",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "mi@k150": {
+          "n_features": 150,
+          "r2": 0.4175748137812665,
+          "rmse": 7.147421883772784,
+          "method": "mi",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "monte_carlo@k50": {
+          "n_features": 50,
+          "r2": 0.1665862473688824,
+          "rmse": 8.54987322688477,
+          "method": "monte_carlo",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "monte_carlo@k100": {
+          "n_features": 100,
+          "r2": 0.21778843829799155,
+          "rmse": 8.28307243698645,
+          "method": "monte_carlo",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "monte_carlo@k150": {
+          "n_features": 150,
+          "r2": 0.2292337988676909,
+          "rmse": 8.222249952639434,
+          "method": "monte_carlo",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "cluster@k50": {
+          "n_features": 50,
+          "r2": 0.45255771543661305,
+          "rmse": 6.929445982042235,
+          "method": "cluster",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "cluster@k100": {
+          "n_features": 100,
+          "r2": 0.42529998123184476,
+          "rmse": 7.099862689225897,
+          "method": "cluster",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "cluster@k150": {
+          "n_features": 150,
+          "r2": 0.3685929699064354,
+          "rmse": 7.44190377856643,
+          "method": "cluster",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "mrmr@k50": {
+          "n_features": 50,
+          "r2": 0.4178404211626441,
+          "rmse": 7.145791953834597,
+          "method": "mrmr",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "mrmr@k100": {
+          "n_features": 100,
+          "r2": 0.4074694967718676,
+          "rmse": 7.209160595020188,
+          "method": "mrmr",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "mrmr@k150": {
+          "n_features": 150,
+          "r2": 0.3879026654867078,
+          "rmse": 7.327226016858272,
+          "method": "mrmr",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "rrelieff@k50": {
+          "n_features": 50,
+          "r2": 0.38219159747323295,
+          "rmse": 7.361329358457291,
+          "method": "rrelieff",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "rrelieff@k100": {
+          "n_features": 100,
+          "r2": 0.42366987783624854,
+          "rmse": 7.109924734310807,
+          "method": "rrelieff",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "rrelieff@k150": {
+          "n_features": 150,
+          "r2": 0.4199794090219836,
+          "rmse": 7.132652233580968,
+          "method": "rrelieff",
+          "k_requested": 150,
+          "k_effective": 150
+        }
+      }
+    },
+    {
+      "fold": 2,
+      "n_culled": 824,
+      "scores": {
+        "corr@k50": {
+          "n_features": 50,
+          "r2": 0.38607272332382814,
+          "rmse": 7.5283582682858325,
+          "method": "corr",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "corr@k100": {
+          "n_features": 100,
+          "r2": 0.39366485719259847,
+          "rmse": 7.481663722361714,
+          "method": "corr",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "corr@k150": {
+          "n_features": 150,
+          "r2": 0.3803341722295086,
+          "rmse": 7.563461271767041,
+          "method": "corr",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "mi@k50": {
+          "n_features": 50,
+          "r2": 0.3777505790691269,
+          "rmse": 7.579212165353121,
+          "method": "mi",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "mi@k100": {
+          "n_features": 100,
+          "r2": 0.3613569191002026,
+          "rmse": 7.678403306182003,
+          "method": "mi",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "mi@k150": {
+          "n_features": 150,
+          "r2": 0.3443015940761218,
+          "rmse": 7.780255832797817,
+          "method": "mi",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "monte_carlo@k50": {
+          "n_features": 50,
+          "r2": 0.2914186586029611,
+          "rmse": 8.087916705873573,
+          "method": "monte_carlo",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "monte_carlo@k100": {
+          "n_features": 100,
+          "r2": 0.2653028217157881,
+          "rmse": 8.23561431540364,
+          "method": "monte_carlo",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "monte_carlo@k150": {
+          "n_features": 150,
+          "r2": 0.23210578329361709,
+          "rmse": 8.419620411437062,
+          "method": "monte_carlo",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "cluster@k50": {
+          "n_features": 50,
+          "r2": 0.3769117314817322,
+          "rmse": 7.584319170958286,
+          "method": "cluster",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "cluster@k100": {
+          "n_features": 100,
+          "r2": 0.3479378691830832,
+          "rmse": 7.758652544829997,
+          "method": "cluster",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "cluster@k150": {
+          "n_features": 150,
+          "r2": 0.2956161477481263,
+          "rmse": 8.063925551514899,
+          "method": "cluster",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "mrmr@k50": {
+          "n_features": 50,
+          "r2": 0.37831053996870134,
+          "rmse": 7.575801139520967,
+          "method": "mrmr",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "mrmr@k100": {
+          "n_features": 100,
+          "r2": 0.36756788024048526,
+          "rmse": 7.640974902786536,
+          "method": "mrmr",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "mrmr@k150": {
+          "n_features": 150,
+          "r2": 0.35827331556674225,
+          "rmse": 7.696918060797668,
+          "method": "mrmr",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "rrelieff@k50": {
+          "n_features": 50,
+          "r2": 0.3372787045379737,
+          "rmse": 7.821810264941049,
+          "method": "rrelieff",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "rrelieff@k100": {
+          "n_features": 100,
+          "r2": 0.3445165302551869,
+          "rmse": 7.778980554782294,
+          "method": "rrelieff",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "rrelieff@k150": {
+          "n_features": 150,
+          "r2": 0.3337353970777993,
+          "rmse": 7.842692445865817,
+          "method": "rrelieff",
+          "k_requested": 150,
+          "k_effective": 150
+        }
+      }
+    },
+    {
+      "fold": 3,
+      "n_culled": 826,
+      "scores": {
+        "corr@k50": {
+          "n_features": 50,
+          "r2": 0.41831650579960755,
+          "rmse": 7.8378892062728465,
+          "method": "corr",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "corr@k100": {
+          "n_features": 100,
+          "r2": 0.4380709773552367,
+          "rmse": 7.703648904863217,
+          "method": "corr",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "corr@k150": {
+          "n_features": 150,
+          "r2": 0.4181515980433138,
+          "rmse": 7.839000151607132,
+          "method": "corr",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "mi@k50": {
+          "n_features": 50,
+          "r2": 0.43477250187590866,
+          "rmse": 7.726225703679409,
+          "method": "mi",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "mi@k100": {
+          "n_features": 100,
+          "r2": 0.4054686782545466,
+          "rmse": 7.923975419643661,
+          "method": "mi",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "mi@k150": {
+          "n_features": 150,
+          "r2": 0.38758752531234963,
+          "rmse": 8.042253607738681,
+          "method": "mi",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "monte_carlo@k50": {
+          "n_features": 50,
+          "r2": 0.21068295292768746,
+          "rmse": 9.130225230779867,
+          "method": "monte_carlo",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "monte_carlo@k100": {
+          "n_features": 100,
+          "r2": 0.2134973047812495,
+          "rmse": 9.113933544100725,
+          "method": "monte_carlo",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "monte_carlo@k150": {
+          "n_features": 150,
+          "r2": 0.1992259031717054,
+          "rmse": 9.19624976715548,
+          "method": "monte_carlo",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "cluster@k50": {
+          "n_features": 50,
+          "r2": 0.42950209759225,
+          "rmse": 7.762163312919602,
+          "method": "cluster",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "cluster@k100": {
+          "n_features": 100,
+          "r2": 0.3975634294316086,
+          "rmse": 7.976482444819148,
+          "method": "cluster",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "cluster@k150": {
+          "n_features": 150,
+          "r2": 0.3537174647686694,
+          "rmse": 8.261653186233158,
+          "method": "cluster",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "mrmr@k50": {
+          "n_features": 50,
+          "r2": 0.44003700129487033,
+          "rmse": 7.690160698840467,
+          "method": "mrmr",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "mrmr@k100": {
+          "n_features": 100,
+          "r2": 0.4199413140396391,
+          "rmse": 7.826934818958624,
+          "method": "mrmr",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "mrmr@k150": {
+          "n_features": 150,
+          "r2": 0.39703957241184074,
+          "rmse": 7.979949721329773,
+          "method": "mrmr",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "rrelieff@k50": {
+          "n_features": 50,
+          "r2": 0.3772780881889617,
+          "rmse": 8.109663305844402,
+          "method": "rrelieff",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "rrelieff@k100": {
+          "n_features": 100,
+          "r2": 0.3939815468666248,
+          "rmse": 8.000160025564469,
+          "method": "rrelieff",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "rrelieff@k150": {
+          "n_features": 150,
+          "r2": 0.38918964269595924,
+          "rmse": 8.031727146671585,
+          "method": "rrelieff",
+          "k_requested": 150,
+          "k_effective": 150
+        }
+      }
+    },
+    {
+      "fold": 4,
+      "n_culled": 825,
+      "scores": {
+        "corr@k50": {
+          "n_features": 50,
+          "r2": 0.430180649381549,
+          "rmse": 7.366762029287694,
+          "method": "corr",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "corr@k100": {
+          "n_features": 100,
+          "r2": 0.44194239257968004,
+          "rmse": 7.290336266686613,
+          "method": "corr",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "corr@k150": {
+          "n_features": 150,
+          "r2": 0.4311924473265737,
+          "rmse": 7.360218739393255,
+          "method": "corr",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "mi@k50": {
+          "n_features": 50,
+          "r2": 0.42605443644902374,
+          "rmse": 7.393386256061049,
+          "method": "mi",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "mi@k100": {
+          "n_features": 100,
+          "r2": 0.44168693078046517,
+          "rmse": 7.292004722869079,
+          "method": "mi",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "mi@k150": {
+          "n_features": 150,
+          "r2": 0.440305333480538,
+          "rmse": 7.301021517970286,
+          "method": "mi",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "monte_carlo@k50": {
+          "n_features": 50,
+          "r2": 0.3220155727827091,
+          "rmse": 8.035592476875104,
+          "method": "monte_carlo",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "monte_carlo@k100": {
+          "n_features": 100,
+          "r2": 0.34913858522387764,
+          "rmse": 7.87321855202146,
+          "method": "monte_carlo",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "monte_carlo@k150": {
+          "n_features": 150,
+          "r2": 0.3340860468455009,
+          "rmse": 7.963740530390298,
+          "method": "monte_carlo",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "cluster@k50": {
+          "n_features": 50,
+          "r2": 0.42984856988805364,
+          "rmse": 7.368908318531219,
+          "method": "cluster",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "cluster@k100": {
+          "n_features": 100,
+          "r2": 0.4254095519901411,
+          "rmse": 7.397538689369879,
+          "method": "cluster",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "cluster@k150": {
+          "n_features": 150,
+          "r2": 0.39407175986156473,
+          "rmse": 7.596589189634534,
+          "method": "cluster",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "mrmr@k50": {
+          "n_features": 50,
+          "r2": 0.42581462174444684,
+          "rmse": 7.394930703550619,
+          "method": "mrmr",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "mrmr@k100": {
+          "n_features": 100,
+          "r2": 0.4396219755415228,
+          "rmse": 7.305477241200363,
+          "method": "mrmr",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "mrmr@k150": {
+          "n_features": 150,
+          "r2": 0.4291709892122175,
+          "rmse": 7.3732857058697725,
+          "method": "mrmr",
+          "k_requested": 150,
+          "k_effective": 150
+        },
+        "rrelieff@k50": {
+          "n_features": 50,
+          "r2": 0.3927370646424452,
+          "rmse": 7.604951197959205,
+          "method": "rrelieff",
+          "k_requested": 50,
+          "k_effective": 50
+        },
+        "rrelieff@k100": {
+          "n_features": 100,
+          "r2": 0.4173806566653798,
+          "rmse": 7.449043216686568,
+          "method": "rrelieff",
+          "k_requested": 100,
+          "k_effective": 100
+        },
+        "rrelieff@k150": {
+          "n_features": 150,
+          "r2": 0.40829732886716397,
+          "rmse": 7.506885799950142,
+          "method": "rrelieff",
+          "k_requested": 150,
+          "k_effective": 150
+        }
+      }
+    }
+  ]
+}
